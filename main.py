@@ -1,10 +1,8 @@
 from time import strftime
-
 import speech_recognition as sr
 import re
 import webbrowser
 import pyttsx3
-import subprocess
 import wikipedia
 import requests
 
@@ -15,7 +13,7 @@ def jarvis(audio):
     engine.say(audio)
     engine.runAndWait()
 
-
+#myCommand is used 
 def myCommand():
     r = sr.Recognizer()
     with sr.Microphone() as source:
@@ -33,31 +31,22 @@ def myCommand():
 
 
 def assistant(command):
-    # open sub-reddit
     command = command.lower()
+    # open youtube
     if 'open youtube' in command:
         reg_ex = re.search('open youtube (.*)', command)
 
         url = "https://www.youtube.com/"
         if reg_ex:
-            sub_reddit = reg_ex.group(1)
-            url = url + 'r/' + sub_reddit
+            yt = reg_ex.group(1)
+            url = url + 'r/' + sub_yt
         webbrowser.open(url)
         jarvis("The youtube content is opened to you")
+    # shuting down the assistant
     elif 'shutdown' in command:
-        jarvis("you fucking piece of shit")
+        jarvis("Bye bye Sir. Have a nice day.")
         exit(-1)
-    elif 'launch' in command:
-        reg_ex = re.search('launch (.*)', command)
-        if reg_ex:
-            app_name = reg_ex.group(1)
-            full_app = app_name + ".txt"
-            loc = "C:\ "
-            loc = loc[:-1]
-        print(loc + full_app)
-        subprocess.Popen([loc + full_app], stdout=subprocess.PIPE)
-        jarvis("I have launched the application")
-
+    #tell me about
     elif 'tell me about' in command:
         reg_ex = re.search('tell me about (.*)', command)
         try:
@@ -68,6 +57,7 @@ def assistant(command):
         except Exception as e:
             print(e)
             jarvis(e)
+    # tell me a joke
     elif 'joke' in command:
         res = requests.get(
             'https://icanhazdadjoke.com/',
@@ -91,7 +81,7 @@ def assistant(command):
             jarvis('Hello Sir. Good afternoon')
         else:
             jarvis('Hello Sir. Good evening')
-    # open website
+    #help me
     elif 'help me' in command:
         jarvis("""
             You can use these commands and I'll help you out:
@@ -103,6 +93,7 @@ def assistant(command):
             6. tell me about xyz : tells you about xyz
             7. time : Current system time
             """)
+    # open website
     elif 'open' in command:
         reg_ex = re.search('open (.+)', command)
         if reg_ex:
